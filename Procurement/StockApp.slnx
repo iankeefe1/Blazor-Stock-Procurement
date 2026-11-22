@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="StockApp.Api/StockApp.Api.csproj" />
+  <Project Path="StockApp.Data/StockApp.Data.csproj" />
+  <Project Path="StockApp.Shared/StockApp.Shared.csproj" />
+  <Project Path="StockApp.Web/StockApp.Web.csproj" />
+</Solution>

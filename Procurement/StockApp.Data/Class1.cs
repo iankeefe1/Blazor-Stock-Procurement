@@ -1,7 +1,6 @@
-﻿namespace StockApp.Data
-{
-    public class Class1
-    {
+﻿namespace StockApp.Data;
 
-    }
+public class Class1
+{
+
 }
