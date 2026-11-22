@@ -1,7 +1,6 @@
-﻿namespace StockApp.Shared
-{
-    public class Class1
-    {
+﻿namespace StockApp.Shared;
 
-    }
+public class Class1
+{
+
 }
