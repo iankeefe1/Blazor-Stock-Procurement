@@ -1,0 +1,44 @@
+﻿@using MudBlazor
+
+@if (!_ready)
+{
+    <MudSkeleton Width="100%" Height="88px" Class="mb-4" />
+}
+else
+{
+    <div class="mb-6">
+        <MudPaper Elevation="0" Class="pa-3 d-flex align-center"
+                  Style="background:rgba(var(--mud-palette-primary-rgb),.08); border:1px solid rgba(var(--mud-palette-primary-rgb),.25); border-radius:12px;">
+
+            <div class="d-flex align-center justify-center mr-4 flex-shrink-0"
+                 style="width:56px; height:56px; border-radius:10px; background:rgba(var(--mud-palette-primary-rgb),.16);">
+                <MudIcon Icon="@IconSvg" Color="Color.Primary" Size="Size.Large" />
+            </div>
+
+            <div class="flex-grow-1" style="min-width:0">
+                <MudText Typo="Typo.h5" Class="font-weight-medium">@DisplayTitle</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Primary">@DisplayDescription</MudText>
+            </div>
+
+@*             @if (Actions is not null)
+            {
+                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+                    <ActivatorContent>
+                        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.MoreHoriz" Size="Size.Medium" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        @Actions
+                    </ChildContent>
+                </MudMenu>
+            } *@
+        </MudPaper>
+
+        @if (ShowDate)
+        {
+            <div class="d-flex justify-end align-center mt-3">
+                <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-2" />
+                <MudText Typo="Typo.body2">@Today</MudText>
+            </div>
+        }
+    </div>
+}
