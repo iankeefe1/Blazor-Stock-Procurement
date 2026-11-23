@@ -1,0 +1,55 @@
+﻿@page "/master/karyawan"
+
+<PageTitle>Master Karyawan · StockApp</PageTitle>
+
+<PageHeader PageKey="master/karyawan" />
+
+<MudPaper Elevation="0" Outlined="true" Class="pa-4">
+    <div class="d-flex flex-wrap align-center mb-3" style="gap:12px;">
+        <MudTextField @bind-Value="_search" Immediate="true" Placeholder="Cari nama, NIK, email…"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width:320px;" />
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add" OnClick="AddAsync">Tambah karyawan</MudButton>
+    </div>
+
+    <MudTable Items="_items" Filter="Matches" Loading="_loading" Dense="true" Hover="true" Elevation="0">
+        <HeaderContent>
+            <MudTh>NIK</MudTh>
+            <MudTh>Nama</MudTh>
+            <MudTh>Jabatan</MudTh>
+            <MudTh>Gudang</MudTh>
+            <MudTh>Role</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh Style="text-align:right">Aksi</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="NIK">@context.Nik</MudTd>
+            <MudTd DataLabel="Nama">
+                <MudText Typo="Typo.body2" Class="font-weight-medium">@context.Name</MudText>
+                <MudText Typo="Typo.caption">@context.Email</MudText>
+            </MudTd>
+            <MudTd DataLabel="Jabatan">@context.Position</MudTd>
+            <MudTd DataLabel="Gudang">@context.Warehouse</MudTd>
+            <MudTd DataLabel="Role">@context.Role</MudTd>
+            <MudTd DataLabel="Status">
+                <MudChip T="string" Size="Size.Small" Color="@(context.IsActive ? Color.Success : Color.Default)">
+                    @(context.IsActive ? "Aktif" : "Nonaktif")
+                </MudChip>
+            </MudTd>
+            <MudTd DataLabel="Aksi" Style="text-align:right">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => EditAsync(context))" />
+                <MudIconButton Icon="@(context.IsActive ? Icons.Material.Filled.Block : Icons.Material.Filled.CheckCircle)"
+                               Size="Size.Small" Color="@(context.IsActive ? Color.Error : Color.Success)"
+                               OnClick="@(() => ToggleAsync(context))" />
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Tidak ada data.</MudText>
+        </NoRecordsContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new[] { 10, 25, 50 }" RowsPerPageString="Baris per halaman" />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
