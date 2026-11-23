@@ -1,14 +1,15 @@
-﻿@page "/"
-@layout EmtyLayout
+﻿@page "/dashboard"
 
 @using MudBlazor
-@using StockApp.Web.Layout
 
 
 <PageTitle>Dashboard · StockApp</PageTitle>
 
-<MudText Typo="Typo.h4" Class="font-weight-bold">Dashboard</MudText>
-<MudText Typo="Typo.body2" Class="mb-6">Ringkasan stok dan aktivitas terbaru. (Data contoh)</MudText>
+<PageHeader PageKey="dashboard">
+    <Actions>
+        <MudMenuItem Icon="@Icons.Material.Filled.Refresh">Muat ulang</MudMenuItem>
+    </Actions>
+</PageHeader>
 
 <MudGrid>
     @foreach (var s in stats)

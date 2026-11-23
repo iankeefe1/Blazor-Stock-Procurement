@@ -29,7 +29,7 @@ namespace StockApp.Web.Pages
             }
 
             error = null;
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/dashboard");
         }
     }
 }

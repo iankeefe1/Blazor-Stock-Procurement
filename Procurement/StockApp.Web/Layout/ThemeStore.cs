@@ -14,12 +14,17 @@ namespace StockApp.Web.Layout
                 Background = "#F4F6F9",
                 AppbarBackground = "#FFFFFF",
                 AppbarText = "#424242",
-                DrawerBackground = "#FFFFFF",
+                DrawerBackground = "#0F2A4A",
+                DrawerText = "#FFFFFF",
+                DrawerIcon = "#FFFFFF",
             },
             PaletteDark = new PaletteDark
             {
                 Primary = "#64B5F6",
                 Secondary = "#4DB6AC",
+                DrawerBackground = "#0B1A2E",
+                DrawerText = "#FFFFFF",
+                DrawerIcon = "#FFFFFF",
             },
             LayoutProperties = new LayoutProperties
             {
