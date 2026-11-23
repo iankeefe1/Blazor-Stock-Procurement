@@ -20,8 +20,6 @@ namespace StockApp.Web.Pages
                 SignIn();
         }
 
-        // SEMENTARA: belum ada autentikasi. Nanti diganti panggilan ke API
-        // (ASP.NET Core Identity + JWT) yang juga mencatat Login log.
         private void SignIn()
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))

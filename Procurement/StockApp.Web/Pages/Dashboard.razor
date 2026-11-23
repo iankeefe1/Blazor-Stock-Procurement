@@ -1,0 +1,94 @@
+﻿@page "/"
+@layout EmtyLayout
+
+@using MudBlazor
+@using StockApp.Web.Layout
+
+
+<PageTitle>Dashboard · StockApp</PageTitle>
+
+<MudText Typo="Typo.h4" Class="font-weight-bold">Dashboard</MudText>
+<MudText Typo="Typo.body2" Class="mb-6">Ringkasan stok dan aktivitas terbaru. (Data contoh)</MudText>
+
+<MudGrid>
+    @foreach (var s in stats)
+    {
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-4 d-flex align-center">
+                <MudAvatar Color="@s.Color" Variant="Variant.Filled" Size="Size.Large" Class="mr-4">
+                    <MudIcon Icon="@s.Icon" />
+                </MudAvatar>
+                <div>
+                    <MudText Typo="Typo.body2">@s.Label</MudText>
+                    <MudText Typo="Typo.h5" Class="font-weight-bold">@s.Value</MudText>
+                    <MudText Typo="Typo.caption">@s.Note</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+    }
+
+    <MudItem xs="12" md="7">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-2">Stok menipis</MudText>
+            <MudTable Items="lowStock" Dense="true" Hover="true" Elevation="0">
+                <HeaderContent>
+                    <MudTh>Barang</MudTh>
+                    <MudTh Style="text-align:right">Stok</MudTh>
+                    <MudTh Style="text-align:right">Minimum</MudTh>
+                    <MudTh>Status</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Barang">@context.Name</MudTd>
+                    <MudTd DataLabel="Stok" Style="text-align:right">@context.Stock</MudTd>
+                    <MudTd DataLabel="Minimum" Style="text-align:right">@context.Min</MudTd>
+                    <MudTd DataLabel="Status">
+                        @if (context.Stock == 0)
+                        {
+                            <MudChip T="string" Color="Color.Error" Size="Size.Small">Habis</MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Color="Color.Warning" Size="Size.Small">Menipis</MudChip>
+                        }
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="5">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-4">Stok per kategori</MudText>
+            <MudStack Spacing="3">
+                @foreach (var c in categories)
+                {
+                    <div>
+                        <div class="d-flex justify-space-between mb-1">
+                            <MudText Typo="Typo.body2">@c.Name</MudText>
+                            <MudText Typo="Typo.body2">@c.Qty unit</MudText>
+                        </div>
+                        <MudProgressLinear Value="@c.Qty" Max="@maxCategory" Color="@c.Color" Rounded="true" Size="Size.Medium" />
+                    </div>
+                }
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-3">Aktivitas terbaru</MudText>
+            <MudStack Spacing="0">
+                @foreach (var a in activities)
+                {
+                    <div class="d-flex align-center justify-space-between py-3 border-b">
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@a.Icon" Color="@a.Color" Class="mr-3" />
+                            <MudText Typo="Typo.body2">@a.Text</MudText>
+                        </div>
+                        <MudText Typo="Typo.caption">@a.When</MudText>
+                    </div>
+                }
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
