@@ -1,0 +1,50 @@
+﻿@page "/login"
+@layout EmtyLayout
+
+@using MudBlazor
+@using StockApp.Web.Layout
+
+
+<PageTitle>Masuk · StockApp</PageTitle>
+
+<div style="min-height:100vh; display:grid; place-items:center; padding:16px; background:linear-gradient(135deg, #1565C0 0%, #0D47A1 55%, #00897B 140%);">
+    <MudPaper Elevation="8" Class="pa-8" Style="width:100%; max-width:420px; border-radius:16px;">
+        <MudStack AlignItems="AlignItems.Center" Spacing="1" Class="mb-6">
+            <MudAvatar Color="Color.Primary" Size="Size.Large">
+                <MudIcon Icon="@Icons.Material.Filled.Inventory2" />
+            </MudAvatar>
+            <MudText Typo="Typo.h5" Class="font-weight-bold">StockApp</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">Masuk untuk mengelola stok barang</MudText>
+        </MudStack>
+
+        <MudStack Spacing="3">
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Variant="Variant.Outlined">@error</MudAlert>
+            }
+
+            <MudTextField @bind-Value="username"
+                          Label="Username"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Person" />
+
+            <MudTextField @bind-Value="password"
+                          Label="Password"
+                          Variant="Variant.Outlined"
+                          InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                          OnAdornmentClick="TogglePassword"
+                          OnKeyDown="OnPasswordKeyDown" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       OnClick="SignIn">
+                Masuk
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+</div>

@@ -1,16 +1,81 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.JSInterop
+@using MudBlazor
+@using StockApp.Web
+@using StockApp.Web.Layout
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+@inherits LayoutComponentBase
 
-        <article class="content px-4">
+<MudThemeProvider Theme="ThemeStore.Theme" @bind-IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0" Class="border-b">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+        <MudIcon Icon="@Icons.Material.Filled.Inventory2" Color="Color.Primary" Class="ml-2 mr-2" />
+        <MudText Typo="Typo.h6" Class="font-weight-bold">StockApp</MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                       Color="Color.Inherit" OnClick="ToggleDark" />
+        <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+            <MudMenuItem Disabled="true">Admin (Administrator)</MudMenuItem>
+            <MudDivider />
+            <MudMenuItem Href="/login" Icon="@Icons.Material.Filled.Logout">Keluar</MudMenuItem>
+        </MudMenu>
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="0" Variant="DrawerVariant.Responsive" ClipMode="DrawerClipMode.Always" Class="border-e">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+
+            <MudNavGroup Title="Master Data" Icon="@Icons.Material.Filled.Storage" Expanded="true">
+                <MudNavLink Href="master/barang" Icon="@Icons.Material.Filled.Inventory">Barang</MudNavLink>
+                <MudNavLink Href="master/supplier" Icon="@Icons.Material.Filled.LocalShipping">Supplier</MudNavLink>
+                <MudNavLink Href="master/gudang" Icon="@Icons.Material.Filled.Warehouse">Gudang</MudNavLink>
+                <MudNavLink Href="master/kategori" Icon="@Icons.Material.Filled.Category">Kategori &amp; Satuan</MudNavLink>
+            </MudNavGroup>
+
+            <MudNavGroup Title="Transaksi" Icon="@Icons.Material.Filled.SwapHoriz" Expanded="true">
+                <MudNavLink Href="transaksi/po" Icon="@Icons.Material.Filled.Description">Purchase Order</MudNavLink>
+                <MudNavLink Href="transaksi/penerimaan" Icon="@Icons.Material.Filled.MoveToInbox">Penerimaan Barang</MudNavLink>
+                <MudNavLink Href="transaksi/pengeluaran" Icon="@Icons.Material.Filled.Outbox">Pengeluaran Barang</MudNavLink>
+                <MudNavLink Href="transaksi/opname" Icon="@Icons.Material.Filled.FactCheck">Stock Opname</MudNavLink>
+            </MudNavGroup>
+
+            <MudNavGroup Title="Laporan" Icon="@Icons.Material.Filled.BarChart">
+                <MudNavLink Href="laporan/stok" Icon="@Icons.Material.Filled.Assessment">Stok saat ini</MudNavLink>
+                <MudNavLink Href="laporan/kartu-stok" Icon="@Icons.Material.Filled.MenuBook">Kartu stok</MudNavLink>
+                <MudNavLink Href="laporan/pergerakan" Icon="@Icons.Material.Filled.SwapVert">Pergerakan stok</MudNavLink>
+            </MudNavGroup>
+
+            <MudNavGroup Title="Administrasi" Icon="@Icons.Material.Filled.AdminPanelSettings">
+                <MudNavLink Href="admin/user" Icon="@Icons.Material.Filled.People">User &amp; Role</MudNavLink>
+                <MudNavLink Href="admin/log-aktivitas" Icon="@Icons.Material.Filled.History">Activity log</MudNavLink>
+                <MudNavLink Href="admin/log-login" Icon="@Icons.Material.Filled.VpnKey">Login log</MudNavLink>
+                <MudNavLink Href="admin/log-error" Icon="@Icons.Material.Filled.BugReport">Error log</MudNavLink>
+            </MudNavGroup>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-6">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode;
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+    private void ToggleDark() => _isDarkMode = !_isDarkMode;
+}
