@@ -10,6 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<IPageInfoService, InMemoryPageInfoService>();
+builder.Services.AddScoped<IEmployeeService, InMemoryEmployeeService>();
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddMudServices();
