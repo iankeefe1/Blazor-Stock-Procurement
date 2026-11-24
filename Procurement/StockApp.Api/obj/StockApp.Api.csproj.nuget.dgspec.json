@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Api\\StockApp.Api.csproj": {}
+    "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Api\\StockApp.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Api\\StockApp.Api.csproj": {
+    "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Api\\StockApp.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Api\\StockApp.Api.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Api\\StockApp.Api.csproj",
         "projectName": "StockApp.Api",
-        "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Api\\StockApp.Api.csproj",
-        "packagesPath": "C:\\Users\\ThinkPad T14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Api\\obj\\",
+        "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Api\\StockApp.Api.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ThinkPad T14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,11 +33,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\StockApp.Data.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\StockApp.Data.csproj"
+              "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\StockApp.Data.csproj": {
+                "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\StockApp.Data.csproj"
               },
-              "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj"
+              "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
+                "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj"
               }
             }
           }
@@ -83,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -501,20 +501,20 @@
         }
       }
     },
-    "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\StockApp.Data.csproj": {
+    "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\StockApp.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\StockApp.Data.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\StockApp.Data.csproj",
         "projectName": "StockApp.Data",
-        "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\StockApp.Data.csproj",
-        "packagesPath": "C:\\Users\\ThinkPad T14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Data\\obj\\",
+        "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\StockApp.Data.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ThinkPad T14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -530,8 +530,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj"
+              "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
+                "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj"
               }
             }
           }
@@ -568,7 +568,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -846,20 +846,20 @@
         }
       }
     },
-    "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
+    "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj",
         "projectName": "StockApp.Shared",
-        "projectPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj",
-        "packagesPath": "C:\\Users\\ThinkPad T14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad T14\\source\\repos\\Blazor-Stock-Procurement\\Procurement\\StockApp.Shared\\obj\\",
+        "projectPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\StockApp.Shared.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Documents\\aplikasi procurement\\Code\\Procurement\\StockApp.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ThinkPad T14\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -909,7 +909,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.404/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
