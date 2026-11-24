@@ -31,6 +31,7 @@ namespace StockApp.Web.Layout
         {
             new("Master Data", Icons.Material.Filled.Storage, "master", new MenuItemInfo[]
             {
+                new("Employee", "/master/employee"),
                 new("Master Barang", "/master/barang"),
                 new("Master Supplier", "/master/supplier"),
                 new("Master Gudang", "/master/gudang"),
@@ -51,7 +52,7 @@ namespace StockApp.Web.Layout
             }),
             new("Administrasi", Icons.Material.Filled.AdminPanelSettings, "admin", new MenuItemInfo[]
             {
-                new("User & Role", "/admin/user"),
+                
                 new("Activity log", "/admin/log-aktivitas"),
                 new("Login log", "/admin/log-login"),
                 new("Error log", "/admin/log-error"),

@@ -1,0 +1,37 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="2">
+            <MudTextField @bind-Value="Model.Nik" Label="NIK" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="Model.Name" Label="Nama lengkap" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="Model.Email" Label="Email" InputType="InputType.Email" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudTextField @bind-Value="Model.Position" Label="Jabatan" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+            <MudSelect T="string" @bind-Value="Model.Warehouse" Label="Gudang" Variant="Variant.Outlined" Margin="Margin.Dense">
+                @foreach (var w in Warehouses)
+                {
+                    <MudSelectItem T="string" Value="@w">@w</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="string" @bind-Value="Model.Role" Label="Role" Variant="Variant.Outlined" Margin="Margin.Dense">
+                @foreach (var r in Roles)
+                {
+                    <MudSelectItem T="string" Value="@r">@r</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSwitch T="bool" @bind-Value="Model.IsActive" Label="Aktif" Color="Color.Primary" />
+
+            @if (_error is not null)
+            {
+                <MudAlert Severity="Severity.Error" Dense="true">@_error</MudAlert>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Batal</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Simpan</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using StockApp.Shared.Dtos;
+using StockApp.Web.Dialogs;
+
 //using StockApp.Web.Dialogs;
 using StockApp.Web.Services;
 
-namespace StockApp.Web.Pages
+namespace StockApp.Web.Pages.MasterData
 {
     public partial class EmployeeList
     {
