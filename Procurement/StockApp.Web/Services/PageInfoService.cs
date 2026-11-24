@@ -3,11 +3,12 @@
 namespace StockApp.Web.Services
 {
     // SEMENTARA: data contoh di memori. Nanti diganti ApiPageInfoService yang membaca dari database.
-    public class InMemoryPageInfoService : IPageInfoService
+    public class PageInfoService : IPageInfoService
     {
         private static readonly Dictionary<string, PageInfoDto> Pages = new[]
         {
             P("dashboard", "Dashboard", "Ringkasan stok dan aktivitas terbaru: barang menipis serta dokumen masuk dan keluar hari ini.", "dashboard"),
+            P("master/employee", "Employee", "Kelola daftar karyawan dalam perusahaan", "employee"),
             P("master/barang", "Master Barang", "Kelola daftar barang yang stoknya dipantau: kode, kategori, satuan, dan stok minimum.", "inventory"),
             P("master/supplier", "Master Supplier", "Kelola data pemasok: kontak, alamat, dan status aktif.", "truck"),
             P("master/gudang", "Master Gudang", "Kelola lokasi penyimpanan barang.", "warehouse"),

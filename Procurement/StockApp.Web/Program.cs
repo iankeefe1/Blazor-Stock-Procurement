@@ -9,8 +9,8 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped<IPageInfoService, InMemoryPageInfoService>();
-builder.Services.AddScoped<IEmployeeService, InMemoryEmployeeService>();
+builder.Services.AddScoped<IPageInfoService, PageInfoService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddMudServices();

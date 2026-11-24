@@ -3,7 +3,7 @@
 namespace StockApp.Web.Services
 {
     // SEMENTARA: data contoh di memori. Nanti diganti ApiEmployeeService (HttpClient -> API -> SQL Server).
-    public class InMemoryEmployeeService : IEmployeeService
+    public class EmployeeService : IEmployeeService
     {
         private static readonly List<EmployeeDto> Data = new()
         {
