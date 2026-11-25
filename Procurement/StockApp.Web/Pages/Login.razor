@@ -1,6 +1,6 @@
 ﻿@page "/"
 @page "/login"
-@layout EmtyLayout
+@layout EmptyLayout
 
 @using MudBlazor
 @using StockApp.Web.Layout
@@ -43,8 +43,9 @@
                        Color="Color.Primary"
                        Size="Size.Large"
                        FullWidth="true"
+                       Disabled="loading"
                        OnClick="SignIn">
-                Masuk
+                @(loading ? "Memproses…" : "Masuk")
             </MudButton>
         </MudStack>
     </MudPaper>

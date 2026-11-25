@@ -6,68 +6,72 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="0" Style="border-bottom:3px solid var(--mud-palette-primary);">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@(() => _menuOpen = !_menuOpen)" />
-        <MudText Typo="Typo.h6" Class="font-weight-bold ml-2">StockApp</MudText>
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="0" Style="border-bottom:3px solid var(--mud-palette-primary);">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@(() => _menuOpen = !_menuOpen)" />
+                <MudText Typo="Typo.h6" Class="font-weight-bold ml-2">StockApp</MudText>
 
-        <MudSpacer />
+                <MudSpacer />
 
-        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
-                       OnClick="@(() => _isDarkMode = !_isDarkMode)" />
+                <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                               OnClick="@(() => _isDarkMode = !_isDarkMode)" />
 
-        <MudButton Color="Color.Inherit" Class="ml-2"
-                   EndIcon="@Icons.Material.Filled.AccountCircle"
-                   OnClick="@(() => _profileOpen = !_profileOpen)">@CurrentUser.Name</MudButton>
-    </MudAppBar>
+                <MudButton Color="Color.Inherit" Class="ml-2"
+                           EndIcon="@Icons.Material.Filled.AccountCircle"
+                           OnClick="@(() => _profileOpen = !_profileOpen)">@CurrentUser.Name</MudButton>
+            </MudAppBar>
 
-    @* Sidebar kiri: menu *@
-    <MudDrawer @bind-Open="_menuOpen" Anchor="Anchor.Start" Variant="DrawerVariant.Responsive"
-               ClipMode="DrawerClipMode.Always" Width="260px" Elevation="0">
-        <MudNavMenu Class="mt-2">
-            <MudNavLink Href="/dashboard" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+            @* Sidebar kiri: menu *@
+            <MudDrawer @bind-Open="_menuOpen" Anchor="Anchor.Start" Variant="DrawerVariant.Responsive"
+                       ClipMode="DrawerClipMode.Always" Width="260px" Elevation="0">
+                <MudNavMenu Class="mt-2">
+                    <MudNavLink Href="/dashboard" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
 
-            @foreach (var g in Groups)
-            {
-                <MudNavGroup Title="@g.Title" Icon="@g.Icon" Expanded="@IsActive(g.Prefix)">
-                    @foreach (var i in g.Items)
+                    @foreach (var g in Groups)
                     {
-                        <MudNavLink Href="@i.Href">@i.Label</MudNavLink>
+                        <MudNavGroup Title="@g.Title" Icon="@g.Icon" Expanded="@IsActive(g.Prefix)">
+                            @foreach (var i in g.Items)
+                            {
+                                <MudNavLink Href="@i.Href">@i.Label</MudNavLink>
+                            }
+                        </MudNavGroup>
                     }
-                </MudNavGroup>
-            }
-        </MudNavMenu>
-    </MudDrawer>
+                </MudNavMenu>
+            </MudDrawer>
 
-    @* Sidebar kanan: profil *@
-    <MudDrawer @bind-Open="_profileOpen" Anchor="Anchor.End" Variant="DrawerVariant.Temporary"
-               ClipMode="DrawerClipMode.Always" Width="300px" Elevation="4">
-        <div class="pa-5">
-            <div class="d-flex align-center mb-4">
-                <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-3">@CurrentUser.Initials</MudAvatar>
-                <div>
-                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold">@CurrentUser.Name</MudText>
-                    <MudText Typo="Typo.body2">@CurrentUser.Role</MudText>
-                    <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="ml-0 mt-1">Aktif</MudChip>
+            @* Sidebar kanan: profil *@
+            <MudDrawer @bind-Open="_profileOpen" Anchor="Anchor.End" Variant="DrawerVariant.Temporary"
+                       ClipMode="DrawerClipMode.Always" Width="300px" Elevation="4">
+                <div class="pa-5">
+                    <div class="d-flex align-center mb-4">
+                        <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-3">@CurrentUser.Initials</MudAvatar>
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">@CurrentUser.Name</MudText>
+                            <MudText Typo="Typo.body2">@CurrentUser.Role</MudText>
+                            <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="ml-0 mt-1">Aktif</MudChip>
+                        </div>
+                    </div>
+                    <MudText Typo="Typo.caption">Username</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-5">@CurrentUser.Username</MudText>
+
+                    <MudButton FullWidth="true" Variant="Variant.Outlined" Color="Color.Error"
+                               StartIcon="@Icons.Material.Filled.Logout" OnClick="SignOutAsync">Keluar</MudButton>
                 </div>
-            </div>
-            <MudText Typo="Typo.caption">Username</MudText>
-            <MudText Typo="Typo.body2" Class="mb-3">@CurrentUser.Username</MudText>
-            <MudText Typo="Typo.caption">Email</MudText>
-            <MudText Typo="Typo.body2" Class="mb-3">@CurrentUser.Email</MudText>
-            <MudText Typo="Typo.caption">Gudang</MudText>   
-            <MudText Typo="Typo.body2" Class="mb-3">@CurrentUser.Warehouse</MudText>
-            <MudText Typo="Typo.caption">Login terakhir</MudText>
-            <MudText Typo="Typo.body2" Class="mb-5">@CurrentUser.LastLogin</MudText>
+            </MudDrawer>
 
-            <MudButton FullWidth="true" Variant="Variant.Outlined" Color="Color.Error"
-                       StartIcon="@Icons.Material.Filled.Logout" OnClick="SignOut">Keluar</MudButton>
-        </div>
-    </MudDrawer>
-
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="my-6">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="my-6">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+    <Authorizing>
+        <MudProgressLinear Indeterminate="true" />
+    </Authorizing>
+</AuthorizeView>

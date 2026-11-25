@@ -1,19 +1,22 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
 using MudBlazor;
+using StockApp.Web.Services.Auth;
 
 namespace StockApp.Web.Layout
 {
     public partial class MainLayout : IDisposable
     {
         [Inject] private NavigationManager Nav { get; set; } = default!;
+        [Inject] private AuthenticationStateProvider AuthProvider { get; set; } = default!;
+        [Inject] private AuthService Auth { get; set; } = default!;
 
         private bool _isDarkMode;
         private bool _menuOpen = true;
         private bool _profileOpen;
 
-        private record UserInfo(string Name, string Role, string Username, string Email,
-                                string Warehouse, string LastLogin)
+        private record UserInfo(string Name, string Role, string Username)
         {
             public string Initials =>
                 string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => char.ToUpper(p[0])));
@@ -22,9 +25,7 @@ namespace StockApp.Web.Layout
         private record MenuItemInfo(string Label, string Href);
         private record MenuGroup(string Title, string Icon, string Prefix, MenuItemInfo[] Items);
 
-        // SEMENTARA: data contoh. Nanti dari login/API.
-        private UserInfo CurrentUser { get; } = new(
-            "Ian Keefe", "Administrator", "ian", "ian@perusahaan.co.id", "Gudang Utama", "Hari ini, 08:12");
+        private UserInfo CurrentUser { get; set; } = new("", "", "");
 
         // Tambah halaman baru cukup menambah satu baris di sini.
         private static readonly MenuGroup[] Groups =
@@ -52,7 +53,6 @@ namespace StockApp.Web.Layout
             }),
             new("Administrasi", Icons.Material.Filled.AdminPanelSettings, "admin", new MenuItemInfo[]
             {
-                
                 new("Activity log", "/admin/log-aktivitas"),
                 new("Login log", "/admin/log-login"),
                 new("Error log", "/admin/log-error"),
@@ -60,12 +60,28 @@ namespace StockApp.Web.Layout
         };
 
         private string CurrentPath => Nav.ToBaseRelativePath(Nav.Uri);
-        private bool IsHome => CurrentPath.StartsWith("dashboard", StringComparison.OrdinalIgnoreCase);
         private bool IsActive(string prefix) => CurrentPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase);
 
-        private void SignOut() => Nav.NavigateTo("/login");
+        protected override async Task OnInitializedAsync()
+        {
+            Nav.LocationChanged += OnLocationChanged;
 
-        protected override void OnInitialized() => Nav.LocationChanged += OnLocationChanged;
+            var user = (await AuthProvider.GetAuthenticationStateAsync()).User;
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                var userName = user.Identity.Name ?? "";
+                CurrentUser = new UserInfo(
+                    user.FindFirst("full_name")?.Value ?? userName,
+                    string.Join(", ", user.FindAll("role").Select(c => c.Value)),
+                    userName);
+            }
+        }
+
+        private async Task SignOutAsync()
+        {
+            await Auth.LogoutAsync();
+            Nav.NavigateTo("/login");
+        }
 
         private void OnLocationChanged(object? sender, LocationChangedEventArgs e) => StateHasChanged();
 
