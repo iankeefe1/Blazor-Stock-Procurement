@@ -1,41 +1,90 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using StockApp.Api.Data;
+using StockApp.Api.Services;
+using StockApp.Data;
+using StockApp.Data.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddDbContext<AppDbContext>(o =>
+    o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddIdentityCore<AppUser>(o =>
+{
+    o.Password.RequiredLength = 8;
+    o.Password.RequireNonAlphanumeric = false;
+    o.User.RequireUniqueEmail = true;
+    o.Lockout.MaxFailedAccessAttempts = 5;
+    o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
+
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()
+          ?? throw new InvalidOperationException("Konfigurasi Jwt belum ada.");
+if (jwt.Key.Length < 32)
+    throw new InvalidOperationException("Jwt:Key minimal 32 karakter (isi lewat user-secrets).");
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<TokenService>();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.MapInboundClaims = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
+            NameClaimType = "name",
+            RoleClaimType = "role",
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
+{
+    if (builder.Environment.IsDevelopment())
+        p.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback);   // semua localhost saat development
+    else
+        p.WithOrigins(builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? []);
+
+    p.AllowAnyHeader().AllowAnyMethod();
+}));
+
+
+
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Dev saja: otomatis migrasi dan isi role + akun admin. Di produksi jalankan migrasi manual.
+    using var scope = app.Services.CreateScope();
+    await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+    await DbSeeder.SeedAsync(scope.ServiceProvider, app.Configuration);
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
