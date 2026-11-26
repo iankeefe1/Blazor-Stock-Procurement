@@ -177,10 +177,12 @@ namespace StockApp.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -220,6 +222,10 @@ namespace StockApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasFilter("[EmployeeId] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -228,7 +234,7 @@ namespace StockApp.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("UserAuth", (string)null);
                 });
 
             modelBuilder.Entity("StockApp.Data.Entities.Employee", b =>
@@ -273,10 +279,6 @@ namespace StockApp.Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Warehouse")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -286,8 +288,6 @@ namespace StockApp.Data.Migrations
 
                     b.HasIndex("Nik")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
@@ -382,6 +382,14 @@ namespace StockApp.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StockApp.Data.Entities.AppUser", b =>
+                {
+                    b.HasOne("StockApp.Data.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

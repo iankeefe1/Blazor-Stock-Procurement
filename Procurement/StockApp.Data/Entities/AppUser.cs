@@ -7,5 +7,7 @@ namespace StockApp.Data.Entities
         public string FullName { get; set; } = "";
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public int? EmployeeId { get; set; }
     }
 }

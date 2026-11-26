@@ -14,7 +14,14 @@ namespace StockApp.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<AppUser>(e => e.Property(x => x.FullName).HasMaxLength(200));
+            builder.Entity<AppUser>(e =>
+            {
+                e.ToTable("UserAuth");
+                // satu karyawan hanya boleh punya satu akun
+                e.HasIndex(x => x.EmployeeId).IsUnique().HasFilter("[EmployeeId] IS NOT NULL");
+                e.HasOne<Employee>().WithMany().HasForeignKey(x => x.EmployeeId)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
 
             builder.Entity<LoginLog>(e =>
             {
@@ -33,9 +40,7 @@ namespace StockApp.Data
                 e.Property(x => x.Position).HasMaxLength(100);
                 e.Property(x => x.Warehouse).HasMaxLength(100);
                 e.Property(x => x.Role).HasMaxLength(50);
-                e.Property(x => x.UserId).HasMaxLength(450);
                 e.HasIndex(x => x.Nik).IsUnique();
-                e.HasIndex(x => x.UserId);
             });
         }
 
