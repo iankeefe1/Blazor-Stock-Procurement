@@ -1,0 +1,73 @@
+﻿@using MudBlazor
+
+<span class="d-inline-flex align-center">
+    <span>@Title</span>
+
+    <span style="position: relative; display: inline-block;">
+        <MudIconButton Icon="@(State.IsActive ? Icons.Material.Filled.FilterAlt : Icons.Material.Outlined.FilterAlt)"
+                       Color="@(State.IsActive ? Color.Primary : Color.Default)"
+                       Size="Size.Small"
+                       Class="ml-1"
+                       OnClick="Toggle" />
+
+        @if (open)
+        {
+            <MudOverlay Visible="true" OnClick="Close" ZIndex="1100" />
+
+            <MudPopover Open="true"
+                        AnchorOrigin="Origin.BottomLeft"
+                        TransformOrigin="Origin.TopLeft"
+                        Class="pa-3"
+                        Style="min-width: 290px;">
+
+                <MudText Typo="Typo.subtitle2" Class="mb-2">Filter: @Title</MudText>
+
+                @if (draft.Type != ColumnFilterType.Bool)
+                {
+                    <MudSelect T="ColumnFilterOp" @bind-Value="draft.Operator" Label="Kondisi"
+                               Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                        @foreach (var op in ColumnFilterState.OperatorsFor(draft.Type))
+                        {
+                            <MudSelectItem T="ColumnFilterOp" Value="@op">@ColumnFilterState.LabelFor(op, draft.Type)</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                @switch (draft.Type)
+                {
+                    case ColumnFilterType.Text:
+                        <MudTextField T="string" @bind-Value="draft.Text" Label="Nilai"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense"
+                                      Immediate="true" OnKeyDown="OnKeyDown" />
+                        break;
+
+                    case ColumnFilterType.Number:
+                        <MudNumericField T="decimal?" @bind-Value="draft.Number" Label="Angka"
+                                         Variant="Variant.Outlined" Margin="Margin.Dense"
+                                         HideSpinButtons="true" />
+                        break;
+
+                    case ColumnFilterType.Date:
+                        <MudTextField T="DateTime?" @bind-Value="draft.Date" Label="Tanggal"
+                                      InputType="InputType.Date" Format="yyyy-MM-dd"
+                                      Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        break;
+
+                    case ColumnFilterType.Bool:
+                        <MudSelect T="bool?" @bind-Value="draft.Bool" Label="Sama dengan"
+                                   Variant="Variant.Outlined" Margin="Margin.Dense">
+                            <MudSelectItem T="bool?" Value="@((bool?)true)">@TrueLabel</MudSelectItem>
+                            <MudSelectItem T="bool?" Value="@((bool?)false)">@FalseLabel</MudSelectItem>
+                        </MudSelect>
+                        break;
+                }
+
+                <div class="d-flex justify-end mt-3">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ClearAsync">Hapus</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                               Class="ml-2" OnClick="ApplyAsync">Terapkan</MudButton>
+                </div>
+            </MudPopover>
+        }
+    </span>
+</span>

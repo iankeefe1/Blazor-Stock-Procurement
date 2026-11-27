@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using StockApp.Web;
 using StockApp.Web.Services;
 using StockApp.Web.Services.Auth;
+using StockApp.Web.Services.MasterData.Interface;
 using StockApp.Web.Services.MasterData.Service;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -34,5 +35,6 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPageInfoService, PageInfoService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 
 await builder.Build().RunAsync();

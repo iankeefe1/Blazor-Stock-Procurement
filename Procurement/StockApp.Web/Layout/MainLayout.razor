@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@using Microsoft.AspNetCore.Components.Authorization
+@using StockApp.Web.Components
 @inherits LayoutComponentBase
 
 <MudThemeProvider Theme="ThemeStore.Theme" @bind-IsDarkMode="_isDarkMode" />
@@ -72,6 +74,6 @@
         <RedirectToLogin />
     </NotAuthorized>
     <Authorizing>
-        <MudProgressLinear Indeterminate="true" />
+    <MudProgressLinear Indeterminate="true" />
     </Authorizing>
 </AuthorizeView>
