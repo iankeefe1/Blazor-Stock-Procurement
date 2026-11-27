@@ -8,6 +8,7 @@ namespace StockApp.Data
         public DbSet<LoginLog> LoginLogs => Set<LoginLog>();
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<UserAuth> UserAuths => Set<UserAuth>();
+        public DbSet<Warehouse> Warehouses => Set<Warehouse>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
