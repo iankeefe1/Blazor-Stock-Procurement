@@ -1,25 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StockApp.Data.Entities;
 
 namespace StockApp.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options)
-        : IdentityDbContext<AppUser>(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<LoginLog> LoginLogs => Set<LoginLog>();
         public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<UserAuth> UserAuths => Set<UserAuth>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<AppUser>(e =>
+            builder.Entity<UserAuth>(e =>
             {
                 e.ToTable("UserAuth");
-                // satu karyawan hanya boleh punya satu akun
-                e.HasIndex(x => x.EmployeeId).IsUnique().HasFilter("[EmployeeId] IS NOT NULL");
-                e.HasOne<Employee>().WithMany().HasForeignKey(x => x.EmployeeId)
+                e.Property(x => x.UserName).HasMaxLength(100);
+                e.Property(x => x.PasswordHash).HasMaxLength(500);
+                e.HasIndex(x => x.UserName).IsUnique();
+                e.HasIndex(x => x.EmployeeId).IsUnique();   // 1 karyawan = 1 akun
+                e.HasOne(x => x.Employee).WithMany().HasForeignKey(x => x.EmployeeId)
                  .OnDelete(DeleteBehavior.Restrict);
             });
 

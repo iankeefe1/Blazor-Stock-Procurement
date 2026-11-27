@@ -11,15 +11,16 @@ namespace StockApp.Api.Services
     {
         private readonly JwtOptions _o = options.Value;
 
-        public (string Token, DateTime ExpiresAt) Create(AppUser user, IEnumerable<string> roles)
+        // user.Employee harus sudah di-Include.
+        public (string Token, DateTime ExpiresAt) Create(UserAuth user, IEnumerable<string> roles)
         {
             var expires = DateTime.UtcNow.AddMinutes(_o.ExpiryMinutes);
 
             var claims = new List<Claim>
             {
-                new("sub", user.Id),
-                new("name", user.UserName!),
-                new("full_name", user.FullName),
+                new("sub", user.Id.ToString()),
+                new("name", user.UserName),
+                new("full_name", user.Employee.Name),
                 new("jti", Guid.NewGuid().ToString()),
             };
             claims.AddRange(roles.Select(r => new Claim("role", r)));

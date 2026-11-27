@@ -13,11 +13,20 @@ namespace StockApp.Web.Services.Auth
                 var response = await http.PostAsJsonAsync("api/auth/login",
                     new LoginRequest { Username = username, Password = password });
 
+                // Error teknis (500, dst.). Password salah tidak lewat sini: server membalas 200.
                 if (!response.IsSuccessStatusCode)
                     return await ApiError.ReadAsync(response);
 
                 var body = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                if (body is null || string.IsNullOrEmpty(body.Token))
+                if (body is null)
+                    return "Respons server tidak valid.";
+
+                if (!body.Success)
+                    return string.IsNullOrWhiteSpace(body.Message)
+                        ? "Username atau password salah."
+                        : body.Message;
+
+                if (string.IsNullOrEmpty(body.Token))
                     return "Respons server tidak valid.";
 
                 await store.SetAsync(body.Token);

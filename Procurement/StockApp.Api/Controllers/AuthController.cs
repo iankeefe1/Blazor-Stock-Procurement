@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StockApp.Api.Services;
 using StockApp.Data;
 using StockApp.Data.Entities;
@@ -10,46 +11,72 @@ namespace StockApp.Api.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthController(UserManager<AppUser> users, AppDbContext db, TokenService tokens) : ControllerBase
+    public class AuthController(AppDbContext db, TokenService tokens, IPasswordHasher<UserAuth> hasher) : ControllerBase
     {
+        private const int MaxFailed = 5;
+        private static readonly TimeSpan LockoutTime = TimeSpan.FromMinutes(15);
+
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
             var userName = request.Username.Trim();
-            var user = await users.FindByNameAsync(userName);
+            var user = await db.UserAuths.Include(u => u.Employee)
+                .FirstOrDefaultAsync(u => u.UserName == userName);
 
             string? failReason = null;
+            var rehash = false;
+
             if (user is null) failReason = "Username tidak ditemukan";
-            else if (!user.IsActive) failReason = "Akun nonaktif";
-            else if (await users.IsLockedOutAsync(user)) failReason = "Akun terkunci";
-            else if (!await users.CheckPasswordAsync(user, request.Password))
+            else if (!user.IsActive || !user.Employee.IsActive) failReason = "Akun nonaktif";
+            else if (user.LockoutEnd > DateTime.UtcNow) failReason = "Akun terkunci";
+            else
             {
-                await users.AccessFailedAsync(user);   // menambah hitungan gagal; terkunci setelah 5x
-                failReason = "Password salah";
+                var check = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+                if (check == PasswordVerificationResult.Failed)
+                {
+                    failReason = "Password salah";
+                    user.FailedCount++;
+                    if (user.FailedCount >= MaxFailed)
+                    {
+                        user.LockoutEnd = DateTime.UtcNow.Add(LockoutTime);
+                        user.FailedCount = 0;
+                    }
+                }
+                else rehash = check == PasswordVerificationResult.SuccessRehashNeeded;
             }
 
-            await WriteLogAsync(userName, user?.Id, failReason);
+            if (failReason is null && user is not null)
+            {
+                user.FailedCount = 0;
+                user.LockoutEnd = null;
+                user.LastLoginAt = DateTime.UtcNow;
+                if (rehash) user.PasswordHash = hasher.HashPassword(user, request.Password);
+            }
+
+            await WriteLogAsync(userName, user?.Id.ToString(), failReason);   // sekaligus menyimpan perubahan user
 
             if (failReason is not null)
             {
-                var message = failReason == "Akun terkunci"
-                    ? "Akun terkunci sementara. Coba lagi beberapa menit lagi."
-                    : "Username atau password salah.";   // sengaja seragam, tidak membocorkan penyebab
-                return Unauthorized(new { message });
+                // HTTP 200 + Success=false supaya tidak muncul error merah di console browser.
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = failReason == "Akun terkunci"
+                        ? "Akun terkunci sementara. Coba lagi beberapa menit lagi."
+                        : "Username atau password salah.",   // sengaja seragam, tidak membocorkan penyebab
+                };
             }
 
-            await users.ResetAccessFailedCountAsync(user!);
-
-            var roles = await users.GetRolesAsync(user!);
-            var (token, expires) = tokens.Create(user!, roles);
+            var (token, expires) = tokens.Create(user!, RolesOf(user!));
 
             return new LoginResponse
             {
+                Success = true,
                 Token = token,
                 ExpiresAt = expires,
-                UserName = user!.UserName!,
-                FullName = user.FullName,
-                Roles = roles.ToArray(),
+                UserName = user!.UserName,
+                FullName = user.Employee.Name,
+                Roles = RolesOf(user),
             };
         }
 
@@ -57,16 +84,23 @@ namespace StockApp.Api.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<LoginResponse>> Me()
         {
-            var user = await users.FindByIdAsync(User.FindFirst("sub")?.Value ?? "");
-            if (user is null || !user.IsActive) return Unauthorized();
+            if (!int.TryParse(User.FindFirst("sub")?.Value, out var id)) return Unauthorized();
+
+            var user = await db.UserAuths.Include(u => u.Employee).FirstOrDefaultAsync(u => u.Id == id);
+            if (user is null || !user.IsActive || !user.Employee.IsActive) return Unauthorized();
 
             return new LoginResponse
             {
-                UserName = user.UserName!,
-                FullName = user.FullName,
-                Roles = (await users.GetRolesAsync(user)).ToArray(),
+                Success = true,
+                UserName = user.UserName,
+                FullName = user.Employee.Name,
+                Roles = RolesOf(user),
             };
         }
+
+        // Role akun = Employees.Role
+        private static string[] RolesOf(UserAuth user) =>
+            string.IsNullOrWhiteSpace(user.Employee.Role) ? [] : [user.Employee.Role];
 
         private async Task WriteLogAsync(string userName, string? userId, string? failReason)
         {
