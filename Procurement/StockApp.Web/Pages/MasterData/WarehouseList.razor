@@ -1,5 +1,6 @@
 ﻿@using StockApp.Shared.Dtos
 @using StockApp.Web.Components.Filters
+@using StockApp.Web.Dialogs
 @page "/master/gudang"
 
 <PageTitle>Master Gudang</PageTitle>
@@ -14,20 +15,20 @@
     <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="mb-4">
         @error
         <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small"
-                   Class="ml-2" OnClick="LoadAsync">Coba lagi</MudButton>
+                   Class="ml-2" OnClick="OnFilterChanged">Coba lagi</MudButton>
     </MudAlert>
 }
 
 <MudPaper Outlined="true" Elevation="0" Class="pa-2">
     <MudTable T="WarehouseDto"
-              Items="Filtered"
+              @ref="table"
+              ServerData="LoadServerData"
               Loading="loading"
               LoadingProgressColor="Color.Primary"
               Hover="true"
               Dense="true"
               Elevation="0"
-              RowsPerPage="10"
-              @bind-CurrentPage="currentPage">
+              RowsPerPage="10">
         <ToolBarContent>
             <div class="d-flex align-center flex-wrap" style="gap: 6px;">
                 @foreach (var f in ActiveFilters)
@@ -41,15 +42,19 @@
                 }
             </div>
             <MudSpacer />
-            <MudText Typo="Typo.caption" Color="Color.Secondary">
-                @(AnyFilter ? $"{Filtered.Count()} dari {items.Count} gudang" : $"{items.Count} gudang")
+            <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mr-4">
+                @(AnyFilter ? $"{totalCount} gudang cocok" : $"{totalCount} gudang")
             </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="@(() => OpenDialogAsync(null))">Tambah gudang</MudButton>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><ColumnFilter Title="Kode" State="fCode" OnChanged="OnFilterChanged" /></MudTh>
             <MudTh><ColumnFilter Title="Nama gudang" State="fName" OnChanged="OnFilterChanged" /></MudTh>
             <MudTh><ColumnFilter Title="Alamat" State="fAddress" OnChanged="OnFilterChanged" /></MudTh>
             <MudTh><ColumnFilter Title="Status" State="fActive" TrueLabel="Aktif" FalseLabel="Nonaktif" OnChanged="OnFilterChanged" /></MudTh>
+            <MudTh Style="width: 110px; text-align: right;">Aksi</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Kode">@context.Code</MudTd>
@@ -60,6 +65,15 @@
                          Color="@(context.IsActive ? Color.Success : Color.Default)">
                     @(context.IsActive ? "Aktif" : "Nonaktif")
                 </MudChip>
+            </MudTd>
+            <MudTd DataLabel="Aksi" Style="text-align: right; white-space: nowrap;">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                               title="Ubah"
+                               OnClick="@(() => OpenDialogAsync(context))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                               title="Nonaktifkan"
+                               Disabled="@(!context.IsActive)"
+                               OnClick="@(() => DeleteAsync(context))" />
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>

@@ -1,4 +1,6 @@
-﻿@using MudBlazor
+﻿@namespace StockApp.Web.Components.Filters
+@using MudBlazor
+@using StockApp.Shared.Dtos.Query
 
 <span class="d-inline-flex align-center">
     <span>@Title</span>
@@ -24,11 +26,11 @@
 
                 @if (draft.Type != ColumnFilterType.Bool)
                 {
-                    <MudSelect T="ColumnFilterOp" @bind-Value="draft.Operator" Label="Kondisi"
+                    <MudSelect T="FilterOp" @bind-Value="draft.Operator" Label="Kondisi"
                                Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
                         @foreach (var op in ColumnFilterState.OperatorsFor(draft.Type))
                         {
-                            <MudSelectItem T="ColumnFilterOp" Value="@op">@ColumnFilterState.LabelFor(op, draft.Type)</MudSelectItem>
+                            <MudSelectItem T="FilterOp" Value="@op">@ColumnFilterState.LabelFor(op, draft.Type)</MudSelectItem>
                         }
                     </MudSelect>
                 }
