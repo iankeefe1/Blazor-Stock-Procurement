@@ -1,20 +1,15 @@
 ﻿using System.Globalization;
+using StockApp.Shared.Dtos.Query;
 
 namespace StockApp.Web.Components.Filters
 {
     public enum ColumnFilterType { Text, Number, Date, Bool }
 
-    public enum ColumnFilterOp
-    {
-        Contains, NotContains, Equal, NotEqual,
-        LessThan, GreaterThan, NotLessThan, NotGreaterThan,
-    }
-
-    /// <summary>Isi filter satu kolom. Dipakai oleh ColumnFilter dan oleh halaman untuk menyaring data.</summary>
+    /// <summary>Isi filter satu kolom di halaman. Diubah menjadi FilterCriterion untuk dikirim ke API.</summary>
     public class ColumnFilterState(ColumnFilterType type)
     {
         public ColumnFilterType Type { get; } = type;
-        public ColumnFilterOp Operator { get; set; } = DefaultOp(type);
+        public FilterOp Operator { get; set; } = DefaultOp(type);
         public string? Text { get; set; }
         public decimal? Number { get; set; }
         public DateTime? Date { get; set; }
@@ -40,49 +35,20 @@ namespace StockApp.Web.Components.Filters
             Text = other.Text; Number = other.Number; Date = other.Date; Bool = other.Bool;
         }
 
-        // ---- pencocokan data ----
-
-        public bool Matches(string? value)
+        /// <summary>Filter untuk dikirim ke API, atau null kalau filter belum diisi.</summary>
+        public FilterCriterion? ToCriterion(string field)
         {
-            if (!IsActive) return true;
-            var v = (value ?? "").Trim();
-            var t = Text!.Trim();
-            return Operator switch
+            if (!IsActive) return null;
+
+            var value = Type switch
             {
-                ColumnFilterOp.Contains => v.Contains(t, StringComparison.OrdinalIgnoreCase),
-                ColumnFilterOp.NotContains => !v.Contains(t, StringComparison.OrdinalIgnoreCase),
-                ColumnFilterOp.Equal => string.Equals(v, t, StringComparison.OrdinalIgnoreCase),
-                ColumnFilterOp.NotEqual => !string.Equals(v, t, StringComparison.OrdinalIgnoreCase),
-                _ => true,
+                ColumnFilterType.Text => Text!.Trim(),
+                ColumnFilterType.Number => Number!.Value.ToString(CultureInfo.InvariantCulture),
+                ColumnFilterType.Date => Date!.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                _ => Bool == true ? "true" : "false",
             };
+            return new FilterCriterion { Field = field, Op = Operator, Value = value };
         }
-
-        public bool Matches(decimal value)
-        {
-            if (!IsActive) return true;
-            var n = Number!.Value;
-            return Compare(value.CompareTo(n));
-        }
-
-        public bool Matches(DateTime value)
-        {
-            if (!IsActive) return true;
-            return Compare(value.Date.CompareTo(Date!.Value.Date));
-        }
-
-        public bool Matches(bool value) => !IsActive || Bool == value;
-
-        // cmp: hasil CompareTo (nilai data dibanding nilai filter)
-        private bool Compare(int cmp) => Operator switch
-        {
-            ColumnFilterOp.Equal => cmp == 0,
-            ColumnFilterOp.NotEqual => cmp != 0,
-            ColumnFilterOp.LessThan => cmp < 0,
-            ColumnFilterOp.GreaterThan => cmp > 0,
-            ColumnFilterOp.NotLessThan => cmp >= 0,
-            ColumnFilterOp.NotGreaterThan => cmp <= 0,
-            _ => true,
-        };
 
         // ---- teks untuk tampilan ----
 
@@ -100,32 +66,30 @@ namespace StockApp.Web.Components.Filters
             return $"{title} {LabelFor(Operator, Type).ToLowerInvariant()} {value}";
         }
 
-        public static ColumnFilterOp DefaultOp(ColumnFilterType type) =>
-            type == ColumnFilterType.Text ? ColumnFilterOp.Contains : ColumnFilterOp.Equal;
+        public static FilterOp DefaultOp(ColumnFilterType type) =>
+            type == ColumnFilterType.Text ? FilterOp.Contains : FilterOp.Equal;
 
-        public static IReadOnlyList<ColumnFilterOp> OperatorsFor(ColumnFilterType type) => type switch
+        public static IReadOnlyList<FilterOp> OperatorsFor(ColumnFilterType type) => type switch
         {
-            ColumnFilterType.Text => [ColumnFilterOp.Contains, ColumnFilterOp.Equal,
-                                      ColumnFilterOp.NotContains, ColumnFilterOp.NotEqual],
-            ColumnFilterType.Bool => [ColumnFilterOp.Equal],
-            _ => [ColumnFilterOp.Equal, ColumnFilterOp.NotEqual,
-                  ColumnFilterOp.LessThan, ColumnFilterOp.GreaterThan,
-                  ColumnFilterOp.NotLessThan, ColumnFilterOp.NotGreaterThan],
+            ColumnFilterType.Text => [FilterOp.Contains, FilterOp.Equal, FilterOp.NotContains, FilterOp.NotEqual],
+            ColumnFilterType.Bool => [FilterOp.Equal],
+            _ => [FilterOp.Equal, FilterOp.NotEqual, FilterOp.LessThan, FilterOp.GreaterThan,
+                  FilterOp.NotLessThan, FilterOp.NotGreaterThan],
         };
 
-        public static string LabelFor(ColumnFilterOp op, ColumnFilterType type)
+        public static string LabelFor(FilterOp op, ColumnFilterType type)
         {
             var date = type == ColumnFilterType.Date;
             return op switch
             {
-                ColumnFilterOp.Contains => "Mengandung",
-                ColumnFilterOp.NotContains => "Tidak mengandung",
-                ColumnFilterOp.Equal => "Sama dengan",
-                ColumnFilterOp.NotEqual => "Tidak sama dengan",
-                ColumnFilterOp.LessThan => date ? "Sebelum" : "Kurang dari",
-                ColumnFilterOp.GreaterThan => date ? "Setelah" : "Lebih dari",
-                ColumnFilterOp.NotLessThan => date ? "Tidak sebelum" : "Tidak kurang dari",
-                ColumnFilterOp.NotGreaterThan => date ? "Tidak setelah" : "Tidak lebih dari",
+                FilterOp.Contains => "Mengandung",
+                FilterOp.NotContains => "Tidak mengandung",
+                FilterOp.Equal => "Sama dengan",
+                FilterOp.NotEqual => "Tidak sama dengan",
+                FilterOp.LessThan => date ? "Sebelum" : "Kurang dari",
+                FilterOp.GreaterThan => date ? "Setelah" : "Lebih dari",
+                FilterOp.NotLessThan => date ? "Tidak sebelum" : "Tidak kurang dari",
+                FilterOp.NotGreaterThan => date ? "Tidak setelah" : "Tidak lebih dari",
                 _ => op.ToString(),
             };
         }
